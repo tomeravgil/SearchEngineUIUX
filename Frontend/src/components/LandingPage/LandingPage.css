@@ -1,0 +1,73 @@
+.landing-page {
+    height: 100vh;
+    font-family: Arial, sans-serif;
+  }
+
+  .top-bar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 1vh; 
+  }
+  
+  .rpi {
+    color: red;
+  }
+  
+  .search {
+    color: black;
+  }
+  
+  .search-container {
+    height: 5vh;
+    display: flex;
+  }
+  
+  .filter-dropdown {
+    margin-right: 10px;
+    height: 7vh
+  }
+  
+  .filter-dropdown select {
+    padding: 8px;
+    font-size: 16px;
+  }
+  
+  .search-bar {
+    width: 80vh;
+    padding: 10px;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    border-radius: 24px 0 0 24px;
+    outline: none;
+  }
+  
+  .search-button {
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #4285f4;
+    color: white;
+    border: none;
+    border-radius: 24px;
+    cursor: pointer;
+  }
+  
+  .search-button:hover {
+    background-color: #357ae8;
+  }
+  
+  .settings-icon {
+    position: absolute;
+    top: 20px; 
+    right: 20px; 
+    cursor: pointer;
+  }
+  
+  .settings-icon:hover {
+    color: #555;
+  }
