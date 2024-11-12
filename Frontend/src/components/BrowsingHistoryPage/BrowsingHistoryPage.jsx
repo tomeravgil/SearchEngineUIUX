@@ -1,11 +1,13 @@
+// BrowsingHistoryPage.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './BrowsingHistoryPage.module.css';
+import rpiLogo from '../../../rpi_logo.jpg'; // Import the RPI logo image
 
 const BrowsingHistoryPage = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const cachedDataSize = '150 MB'; 
+  const cachedDataSize = '150 MB'; // Example cached data size
   const recentHistory = [
     'https://example.com/page1',
     'https://example.com/page2',
@@ -27,7 +29,12 @@ const BrowsingHistoryPage = () => {
   return (
     <div className={styles.browsingHistoryPage}>
       <div className={styles.header}>
-        <span className={styles.rpi} onClick={handleRPIClick}>RPI</span>
+        <img
+          src={rpiLogo}
+          alt="RPI Logo"
+          className={styles.logo}
+          onClick={handleRPIClick}
+        />
         <h1 className={styles.title} onClick={handleSettingsClick}>Settings</h1>
       </div>
 

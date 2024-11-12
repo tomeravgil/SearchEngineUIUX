@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from './AccessibilityPage.module.css';
+import styles from './AccessibilityPage.module.css'
+import rpiLogo from '../../../rpi_logo.jpg'
 
 const AccessibilityPage = () => {
   const navigate = useNavigate();
@@ -19,8 +20,14 @@ const AccessibilityPage = () => {
 
   return (
     <div className={styles.accessibilityPage}>
-      
-        <span className={styles.rpi} onClick={handleRPIClick}>RPI</span>
+
+        <img
+          src={rpiLogo}
+          alt="RPI Logo"
+          className={styles.logo}
+          onClick={handleRPIClick}
+        />
+        
       <div className={styles.header}>
         <h1 className={styles.title} onClick={handleSettingsClick}>Settings</h1>
         <h2 className={styles.subheader}>Accessibility</h2>

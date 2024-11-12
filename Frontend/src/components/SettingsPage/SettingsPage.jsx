@@ -1,6 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './SettingsPage.css';
+import styles from './SettingsPage.module.css';
+import rpiLogo from '../../../rpi_logo.jpg'
+
 
 const SettingsPage = () => {
   const navigate = useNavigate();
@@ -14,23 +16,28 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className="settings-page">
-    <span className="rpiSettings" onClick={handleRPIClick}>RPI</span>
-      <div className="headerSettings">
-        <h1 className="title">Settings</h1>
+    <div className={styles.settingspage}>
+    <img
+          src={rpiLogo}
+          alt="RPI Logo"
+          className={styles.logo}
+          onClick={handleRPIClick}
+        />
+      <div className={styles.headerSettings}>
+        <h1 className={styles.title}>Settings</h1>
       </div>
       
-      <div className="settings-sections">
-        <div className="section" onClick={() => handleSectionClick('accessibility')}>
+      <div className={styles.settingssections}>
+        <div className={styles.section} onClick={() => handleSectionClick('accessibility')}>
           Accessibility
         </div>
-        <div className="section" onClick={() => handleSectionClick('performance')}>
+        <div className={styles.section} onClick={() => handleSectionClick('performance')}>
           Performance
         </div>
-        <div className="section" onClick={() => handleSectionClick('privacy')}>
+        <div className={styles.section} onClick={() => handleSectionClick('privacy')}>
           Privacy
         </div>
-        <div className="section" onClick={() => handleSectionClick('browsing-history')}>
+        <div className={styles.section} onClick={() => handleSectionClick('browsing-history')}>
           Browsing History
         </div>
       </div>
