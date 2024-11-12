@@ -33,6 +33,9 @@
     font-weight: bold;
     cursor: pointer;
   }
+  .title:hover{
+    color: #555;;
+  }
   
   .subheader {
     font-size: 2rem;
