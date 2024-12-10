@@ -6,6 +6,52 @@ import { useRouter } from "next/navigation";
 import { debounce } from "lodash";
 import Cookies from "js-cookie";
 
+/**
+ * The `Home` component is the main page of the SE
+ * It provides a search input field with dynamic suggestions and displays search results.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered component.
+ *
+ * @example
+ * <Home />
+ *
+ * @remarks
+ * - Uses `useState` to manage search input, search results, and dynamic suggestions.
+ * - Uses `useEffect` to fetch suggestions based on the search input.
+ * - Uses `debounce` to limit the frequency of API calls for fetching suggestions.
+ * - Saves search queries to `localStorage` and cookies.
+ * - Displays search results in a grid layout.
+ * - Provides a button to navigate to the search history page.
+ *
+ * @function
+ * @name Home
+ *
+ * @typedef {Object} Suggestion
+ * @property {string} label - The display label of the suggestion.
+ * @property {string} value - The value of the suggestion.
+ *
+ * @typedef {Object} SearchHistory
+ * @property {string} query - The search query.
+ * @property {string} date - The timestamp of the search.
+ *
+ * @hook
+ * @name useState
+ * @description Manages the state of search input, search results, and dynamic suggestions.
+ *
+ * @hook
+ * @name useEffect
+ * @description Fetches suggestions based on the search input and cleans up the debounce function on unmount.
+ *
+ * @hook
+ * @name useCallback
+ * @description Debounces the fetch function to limit the frequency of API calls.
+ *
+ * @param {string} query - The search query.
+ * @param {React.KeyboardEvent<HTMLInputElement>} event - The keyboard event.
+ *
+ * @returns {void}
+ */
 export default function Home() {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searchInput, setSearchInput] = useState("");
