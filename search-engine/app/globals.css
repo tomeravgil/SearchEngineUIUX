@@ -2,16 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -20,8 +10,8 @@ body {
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 346 100% 42%;  /* RPI Red */
+    --primary-foreground: 0 0% 100%;
     --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
     --muted: 240 4.8% 95.9%;
@@ -33,13 +23,8 @@ body {
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
     --ring: 240 10% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
   }
+
   .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
@@ -47,8 +32,8 @@ body {
     --card-foreground: 0 0% 98%;
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
+    --primary: 346 100% 42%;  /* Keep RPI Red */
+    --primary-foreground: 0 0% 100%;
     --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
     --muted: 240 3.7% 15.9%;
@@ -60,11 +45,6 @@ body {
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
   }
 }
 
@@ -73,6 +53,113 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground transition-colors duration-300;
   }
+}
+
+/* Enhanced Animations with Motion Easing */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Animation Classes with Enhanced Transitions */
+.fade-in {
+  animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.fade-out {
+  animation: fadeOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.slide-in {
+  animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.float-animation {
+  animation: floatUp 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Enhanced Component Transitions */
+.search-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  @apply bg-card text-card-foreground;
+}
+
+.search-card:hover {
+  transform: translateY(-5px) scale(1.01);
+  @apply shadow-lg;
+}
+
+.suggestion-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  @apply bg-card text-card-foreground;
+}
+
+.suggestion-card:hover {
+  transform: translateY(-5px);
+  @apply shadow-lg;
+}
+
+.settings-icon {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.settings-icon:hover {
+  transform: rotate(90deg);
+}
+.drawer {
+  @apply grid grid-cols-[auto_1fr];
+}
+
+.drawer-toggle:checked ~ .drawer-side > .drawer-overlay {
+  @apply visible;
+}
+
+.drawer-toggle ~ .drawer-side {
+  @apply hidden lg:grid;
+}
+
+.drawer-toggle:checked ~ .drawer-side {
+  @apply grid;
 }

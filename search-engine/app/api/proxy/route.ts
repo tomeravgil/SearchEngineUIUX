@@ -14,12 +14,23 @@ export async function GET(request: Request) {
     });
 
     if (!response.ok) {
-      return NextResponse.json({ error: 'Failed to fetch data from API' }, { status: 500 });
+      throw new Error(`API returned ${response.status}`);
     }
 
     const data = await response.json();
-    return NextResponse.json(data);
+    
+    // Transform the data to match our expected format
+    const suggestions = data.suggestions.map((suggestion: string) => ({
+      label: suggestion,
+      value: suggestion.toLowerCase(),
+    }));
+
+    return NextResponse.json({ suggestions });
   } catch (error) {
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('API Error:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch suggestions', details: error.message },
+      { status: 500 }
+    );
   }
 }

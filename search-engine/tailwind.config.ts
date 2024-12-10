@@ -62,6 +62,12 @@ const config: Config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      animation: {
+        "fade-in": "fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards",
+        "fade-out": "fadeOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards",
+        "slide-in": "slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards",
+        "float": "floatUp 2s cubic-bezier(0.4, 0, 0.2, 1) infinite",
+      },
     },
   },
   plugins: [
