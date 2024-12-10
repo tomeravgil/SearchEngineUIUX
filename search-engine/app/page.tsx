@@ -55,6 +55,18 @@ export default function Home() {
     { text: "What is campus life like at RPI?", icon: "🏠" },
   ];
 
+  const getQueryId = async () => {
+    try {
+      const response = await fetch('/api/queryid');
+      if (!response.ok) throw new Error('Failed to get query ID');
+      const data = await response.json();
+      return data.query_ID;
+    } catch (error) {
+      console.error('Error getting query ID:', error);
+      return null;
+    }
+  };
+
   const handleSettingsClick = () => {
     setIsFadingOut(true);
     setTimeout(() => {
@@ -62,10 +74,16 @@ export default function Home() {
     }, 300);
   };
 
-  const handleSearchClick = (query?: string) => {
+  const handleSearchClick = async (query?: string) => {
     const searchQuery = query || searchInput;
     if (!searchQuery.trim()) return;
     
+    // Get query ID before proceeding with search
+    const queryId = await getQueryId();
+    if (queryId) {
+      console.log('Search initiated with Query ID:', queryId);
+    }
+
     setIsFadingOut(true);
     saveSearch(searchQuery);
     setTimeout(() => {
@@ -73,9 +91,9 @@ export default function Home() {
     }, 300);
   };
 
-  const handleAutocompleteChange = (event: any, newValue: { label: string; value: string } | null) => {
+  const handleAutocompleteChange = async (event: any, newValue: { label: string; value: string } | null) => {
     if (newValue) {
-      handleSearchClick(newValue.label);
+      await handleSearchClick(newValue.label);
     }
   };
 
