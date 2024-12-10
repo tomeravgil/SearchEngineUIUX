@@ -3,6 +3,40 @@
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 
+/**
+ * A React component that displays the search history and provides options to clear the local history and cookies.
+ *
+ * @component
+ * @example
+ * return (
+ *   <SearchHistory />
+ * )
+ *
+ * @returns {JSX.Element} The rendered component.
+ *
+ * @remarks
+ * This component retrieves the search history from local storage and the last search from cookies.
+ * It provides buttons to clear the local history, cookies, or both.
+ *
+ * @function
+ * @name SearchHistory
+ *
+ * @typedef {Object} SearchEntry
+ * @property {string} query - The search query.
+ * @property {string} date - The date of the search.
+ *
+ * @typedef {Object} LastSearch
+ * @property {string} query - The last search query.
+ * @property {string} date - The date of the last search.
+ *
+ * @state {SearchEntry[]} history - The array of search history entries.
+ * @state {LastSearch | null} lastSearch - The last search entry or null if not available.
+ *
+ * @hook {useEffect} - Retrieves the search history and last search from local storage and cookies on component mount.
+ *
+ * @function clearLocalHistory - Clears the search history from local storage and updates the state.
+ * @function clearCookies - Clears the last search from cookies and updates the state.
+ */
 export default function SearchHistory() {
   const [history, setHistory] = useState<{ query: string; date: string }[]>([]);
   const [lastSearch, setLastSearch] = useState<{ query: string; date: string } | null>(null);
