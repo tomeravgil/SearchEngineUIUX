@@ -1,57 +1,34 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { debounce } from "lodash";
 import Cookies from "js-cookie";
+import { Autocomplete, TextField } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
-/**
- * The `Home` component is the main page of the SE
- * It provides a search input field with dynamic suggestions and displays search results.
- *
- * @component
- * @returns {JSX.Element} The rendered component.
- *
- * @example
- * <Home />
- *
- * @remarks
- * - Uses `useState` to manage search input, search results, and dynamic suggestions.
- * - Uses `useEffect` to fetch suggestions based on the search input.
- * - Uses `debounce` to limit the frequency of API calls for fetching suggestions.
- * - Saves search queries to `localStorage` and cookies.
- * - Displays search results in a grid layout.
- * - Provides a button to navigate to the search history page.
- *
- * @function
- * @name Home
- *
- * @typedef {Object} Suggestion
- * @property {string} label - The display label of the suggestion.
- * @property {string} value - The value of the suggestion.
- *
- * @typedef {Object} SearchHistory
- * @property {string} query - The search query.
- * @property {string} date - The timestamp of the search.
- *
- * @hook
- * @name useState
- * @description Manages the state of search input, search results, and dynamic suggestions.
- *
- * @hook
- * @name useEffect
- * @description Fetches suggestions based on the search input and cleans up the debounce function on unmount.
- *
- * @hook
- * @name useCallback
- * @description Debounces the fetch function to limit the frequency of API calls.
- *
- * @param {string} query - The search query.
- * @param {React.KeyboardEvent<HTMLInputElement>} event - The keyboard event.
- *
- * @returns {void}
- */
+const StyledAutocomplete = styled(Autocomplete)({
+  '& .MuiOutlinedInput-root': {
+    padding: '0.75rem',
+    borderRadius: '9999px',
+    '& fieldset': {
+      borderColor: '#e5e7eb',
+    },
+    '&:hover fieldset': {
+      borderColor: '#d1d5db',
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: '#dc2626',
+    },
+  },
+  '& .MuiOutlinedInput-input': {
+    padding: '0 !important',
+  },
+  '& .MuiAutocomplete-endAdornment': {
+    right: '14px',
+  },
+});
+
 export default function Home() {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searchInput, setSearchInput] = useState("");
@@ -65,7 +42,6 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    // Check if user has already made a cookie choice
     const cookieChoice = localStorage.getItem('cookiesAccepted');
     if (cookieChoice !== null) {
       setShowCookieBanner(false);
@@ -73,7 +49,6 @@ export default function Home() {
     }
   }, []);
 
-  // Suggested questions
   const questions = [
     { text: "What is RPI known for?", icon: "🏫" },
     { text: "How do I apply to RPI?", icon: "📄" },
@@ -89,6 +64,8 @@ export default function Home() {
 
   const handleSearchClick = (query?: string) => {
     const searchQuery = query || searchInput;
+    if (!searchQuery.trim()) return;
+    
     setIsFadingOut(true);
     saveSearch(searchQuery);
     setTimeout(() => {
@@ -96,32 +73,15 @@ export default function Home() {
     }, 300);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && searchInput.trim()) {
-      handleSearchClick();
+  const handleAutocompleteChange = (event: any, newValue: { label: string; value: string } | null) => {
+    if (newValue) {
+      handleSearchClick(newValue.label);
     }
   };
 
-  const handleAcceptCookies = () => {
-    setShowCookieBanner(false);
-    setCookiesEnabled(true);
-    localStorage.setItem('cookiesAccepted', 'true');
-    // Clear any existing cookies to start fresh
-    Object.keys(Cookies.get()).forEach(cookie => {
-      Cookies.remove(cookie);
-    });
+  const handleInputChange = (event: any, newInputValue: string) => {
+    setSearchInput(newInputValue);
   };
-
-  const handleDeclineCookies = () => {
-    setShowCookieBanner(false);
-    setCookiesEnabled(false);
-    localStorage.setItem('cookiesAccepted', 'false');
-    // Remove all existing cookies
-    Object.keys(Cookies.get()).forEach(cookie => {
-      Cookies.remove(cookie);
-    });
-  };
-
 
   const saveSearch = (query: string) => {
     if (!cookiesEnabled) return;
@@ -148,6 +108,14 @@ export default function Home() {
         );
       } catch (error) {
         console.error(error);
+        // Fallback suggestions
+        setDynamicSuggestions([
+          { label: "Campus Tours", value: "tours" },
+          { label: "Admissions", value: "admissions" },
+          { label: "Academic Programs", value: "academics" },
+          { label: "Student Life", value: "student-life" },
+          { label: "Research", value: "research" }
+        ]);
       }
     }, 300),
     []
@@ -159,6 +127,24 @@ export default function Home() {
       fetchSuggestions.cancel();
     };
   }, [searchInput, fetchSuggestions]);
+
+  const handleAcceptCookies = () => {
+    setShowCookieBanner(false);
+    setCookiesEnabled(true);
+    localStorage.setItem('cookiesAccepted', 'true');
+    Object.keys(Cookies.get()).forEach(cookie => {
+      Cookies.remove(cookie);
+    });
+  };
+
+  const handleDeclineCookies = () => {
+    setShowCookieBanner(false);
+    setCookiesEnabled(false);
+    localStorage.setItem('cookiesAccepted', 'false');
+    Object.keys(Cookies.get()).forEach(cookie => {
+      Cookies.remove(cookie);
+    });
+  };
 
   return (
     <div className="min-h-screen relative">
@@ -186,29 +172,40 @@ export default function Home() {
               ))}
             </div>
 
-            <div className="w-full border p-3 rounded-full flex flex-row items-center space-x-2 bg-card text-card-foreground shadow-md hover:shadow-lg transition-shadow duration-300">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                />
-              </svg>
-
-              <input
-                type="text"
-                className="w-full h-full focus:outline-none bg-transparent"
-                placeholder="Search..."
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                onKeyDown={handleKeyDown}
+            <div className="w-full">
+              <StyledAutocomplete
+                freeSolo
+                options={dynamicSuggestions}
+                value={null}
+                inputValue={searchInput}
+                onInputChange={handleInputChange}
+                onChange={handleAutocompleteChange}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder="Search..."
+                    fullWidth
+                    InputProps={{
+                      ...params.InputProps,
+                      startAdornment: (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="size-5 mr-2 text-gray-400"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                          />
+                        </svg>
+                      ),
+                    }}
+                  />
+                )}
               />
             </div>
           </div>
@@ -225,45 +222,28 @@ export default function Home() {
           </div>
         </div>
 
-        {searchResults.length > 0 && (
-          <div className="mt-8 grid grid-cols-1 gap-4">
-            {searchResults.map((result, index) => (
-              <div key={`${result.value}-${index}`} className="group border-2 border-gray-200 bg-gray-50 rounded-lg p-4 shadow-xs transform transition duration-300 hover:shadow-lg hover:-translate-y-1">
-                <a href={`https://rpi.edu/${result.value}${index + 1}`} className="text-primaryRed transition duration-500 ease-in-out group-hover:text-red-500">
-                  <div className="flex flex-col">
-                    <span className="text-[10px] font-thin">rpi.edu/{result.value}</span>
-                    <span className="text-[10px] font-thin text-gray-400">https://www.rpi.edu/{result.value}</span>
-                  </div>
-                  <h3 className="font-bold">{result.label}</h3>
-                </a>
-                <p className="text-sm">Details about {result.label}</p>
+        {showCookieBanner && (
+          <div className="fixed bottom-0 left-0 right-0 bg-card text-card-foreground p-4 shadow-lg border-t z-50 fade-in">
+            <div className="container mx-auto max-w-4xl flex flex-col sm:flex-row justify-between items-center gap-4">
+              <p className="text-sm text-center sm:text-left">We use cookies to enhance your experience. Do you wish to accept cookies?</p>
+              <div className="flex gap-4">
+                <button
+                  className="px-4 py-2 bg-primaryRed text-white rounded hover:bg-red-700 transition"
+                  onClick={handleAcceptCookies}
+                >
+                  Accept All
+                </button>
+                <button
+                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition"
+                  onClick={handleDeclineCookies}
+                >
+                  Disable All
+                </button>
               </div>
-            ))}
+            </div>
           </div>
         )}
       </div>
-
-      {showCookieBanner && (
-        <div className="fixed bottom-0 left-0 right-0 bg-card text-card-foreground p-4 shadow-lg border-t z-50 fade-in">
-          <div className="container mx-auto max-w-4xl flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-center sm:text-left">We use cookies to enhance your experience. Do you wish to accept cookies?</p>
-            <div className="flex gap-4">
-              <button
-                className="px-4 py-2 bg-primaryRed text-white rounded hover:bg-red-700 transition"
-                onClick={handleAcceptCookies}
-              >
-                Accept All
-              </button>
-              <button
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition"
-                onClick={handleDeclineCookies}
-              >
-                Disable All
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

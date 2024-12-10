@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/table";
 import { getStorageSize } from '@/lib/cache-utils';
 
+
+
 interface SearchHistoryItem {
   id: number;
   query: string;
