@@ -6,7 +6,7 @@ import { debounce } from "lodash";
 import Cookies from "js-cookie";
 import { Autocomplete, TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
-
+import FeedbackModal from "@/components/FeedbackModal/feedback";
 const StyledAutocomplete = styled(Autocomplete)({
   '& .MuiOutlinedInput-root': {
     padding: '0.75rem',
@@ -30,6 +30,7 @@ const StyledAutocomplete = styled(Autocomplete)({
 });
 
 export default function Home() {
+  const [isModalOpen, setModalOpen] = useState(false);
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searchInput, setSearchInput] = useState("");
   const [dynamicSuggestions, setDynamicSuggestions] = useState<
@@ -261,6 +262,19 @@ export default function Home() {
             </div>
           </div>
         )}
+
+          <FeedbackModal
+            isOpen={isModalOpen}
+            onClose={() => setModalOpen(false)}
+          />
+      </div>
+      <div className="fixed bottom-4 right-4">
+        <button 
+          className="bg-red-800 text-white p-2 rounded-xl" 
+          onClick={() => setModalOpen(true)}
+        >
+          Have Feedback?
+        </button>
       </div>
     </div>
   );
